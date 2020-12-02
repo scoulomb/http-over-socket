@@ -40,9 +40,16 @@ def main():
     # curl -k -L -H "Host: " https://attestationcovid.site -v -> failing
     # whereas by default working as curl add the Host header marching the `hostname`
 
-    hostname = "www.google.com"
+    hostname = "attestationcovid.site"
     port = 443
     connection = Connection(hostname, port)
+    request = Request("GET", "/", ["Accept: */*"])
+    response = send(connection, request)
+    print(response)
+
+    hostname = "attestationcovid.site"
+    port = 80
+    connection = Connection(hostname, port, protocol="http")
     request = Request("GET", "/", ["Accept: */*"])
     response = send(connection, request)
     print(response)
@@ -53,10 +60,14 @@ def send(connection: Connection, request: Request) -> str:
 
     request_str: str = request_as_string(request, connection.hostname, connection.port)
     print(request_str)
-    https_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+
     # TCP / IPv4
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as raw_socket:
-        s = https_context.wrap_socket(raw_socket, server_hostname=connection.hostname)
+        if connection.protocol == "https":
+            https_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+            s = https_context.wrap_socket(raw_socket, server_hostname=connection.hostname)
+        else:
+            s = raw_socket
         s.settimeout(connection.timeout_seconds)
 
         try:
