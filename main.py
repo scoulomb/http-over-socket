@@ -15,9 +15,9 @@ class Request:
     timeout_seconds: int = 10
 
 
-def request_as_string(request: Request, hostname: str) -> str:
+def request_as_string(request: Request, hostname: str, port: int) -> str:
     request_lines = [f"{request.method} {request.path} HTTP/1.1",
-                     f"Host: {hostname}",
+                     f"Host: {hostname}:{port}",
                      *request.headers,
                      HEADER_SEPARATOR.decode(),
                      ]  # empty body?
@@ -51,7 +51,7 @@ def main():
 def send(connection: Connection, request: Request) -> str:
     buffer_size = 1024
 
-    request_str: str = request_as_string(request, connection.hostname)
+    request_str: str = request_as_string(request, connection.hostname, connection.port)
     print(request_str)
     https_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     # TCP / IPv4
