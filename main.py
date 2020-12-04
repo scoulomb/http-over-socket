@@ -20,6 +20,7 @@ def request_as_string(request: Request, hostname: str, port: int) -> str:
                      f"Host: {hostname}:{port}",
                      *request.headers,
                      HEADER_SEPARATOR.decode(),
+                     request.body if request.body is not None else ""
                      ]  # empty body?
 
     request = "\r\n".join(request_lines)
@@ -119,8 +120,5 @@ def send(connection: Connection, request: Request) -> str:
 
 if __name__ == "__main__":
     main()
-
-# our client managed content-length only but some server retruns a Transfer-Encoding with the size of the chunk
-# https://tools.ietf.org/html/rfc7230#section-3.3.2
 
 # use www.google.com to not have -L

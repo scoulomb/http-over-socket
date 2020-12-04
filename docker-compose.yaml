@@ -1,0 +1,8 @@
+version: "3.6"
+services:
+  ci:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    image: ci
+    command: ["-X", "GET", "--path", "https://github.com:443/", "--header", "Accept: *\/*", "--header", "yoloheader: scoulomb"]
