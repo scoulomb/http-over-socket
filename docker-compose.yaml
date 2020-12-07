@@ -5,4 +5,4 @@ services:
       dockerfile: Dockerfile
       context: .
     image: ci
-    command: ["-X", "GET", "--path", "https://github.com:443/", "--header", "Accept: *\/*", "--header", "yoloheader: scoulomb"]
+    command: ["-X", "GET", "--path", "https://github.com:443/", "--header", "Accept: application/json", "--header", "yoloheader: scoulomb"]

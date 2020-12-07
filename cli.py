@@ -26,6 +26,7 @@ def _read_cli_arguments() -> Namespace:
         "--header",
         type=str,
         help="url",
+        default=[],
         action="append",
         nargs="+"
     )
