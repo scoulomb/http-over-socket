@@ -1,5 +1,7 @@
 # README
 
+[![Build Status](https://travis-ci.org/scoulomb/http-over-socket.svg?branch=main)](https://travis-ci.org/scoulomb/http-over-socket)
+
 ## Run from Python 
 
 ````shell script
