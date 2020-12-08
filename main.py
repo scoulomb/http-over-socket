@@ -16,15 +16,30 @@ class Request:
 
 
 def request_as_string(request: Request, hostname: str, port: int) -> str:
-    request_lines = [f"{request.method} {request.path} HTTP/1.1",
-                     f"Host: {hostname}:{port}",
-                     *request.headers,
-                     HEADER_SEPARATOR.decode(),
-                     request.body if request.body is not None else ""
-                     ]  # empty body?
+    user_request_headers = [*request.headers]
+    if len(user_request_headers) > 0:
+        user_header_str = "\r\n".join(user_request_headers) + "\r\n"
+    else:
+        user_header_str = ""
 
-    request = "\r\n".join(request_lines)
-    return request
+    if request.body is None:
+        request.body = ""
+
+    # To build the request_str with body message I used as a model:
+    # s.send(
+    #    b'POST /api/v1/namespaces/default/pods HTTP/1.1\r\nHost: 127.0.0.1:9515\r\nContent-Type: application/json\r\nContent-Length: 155\r\n\r\n{"apiVersion":"v1","kind":"Pod","metadata":{"name":"nginx1"},"spec":{"containers":[{"name":"nginx","image":"nginx:1.7.9","ports":[{"containerPort":80}]}]}}')
+    # based on https://stackoverflow.com/questions/45695168/send-raw-post-request-using-socket (see README, Example of simple usage using Kubernetes API)
+    request_str = f'{request.method} {request.path} HTTP/1.1\r\n' \
+                  f'Host: {hostname}:{port}\r\n' \
+                  f'Content-Type: application/json\r\n' \
+                  f'{user_header_str}' \
+                  f'Content-Length: {len(request.body)}\r\n' \
+                  f'\r\n' \
+                  f'{request.body}'
+
+    # Adding extra '\r\n' here, will make the client send 2 messages. Server will send a 400 (like kubectl proxy) and some will close the connection
+
+    return request_str
 
 
 @dataclass
@@ -83,7 +98,8 @@ def send(connection: Connection, request: Request) -> str:
         print(f"connection established with host {connection.hostname}")
 
         s.settimeout(request.timeout_seconds)
-        s.send(request_str.encode())
+        s.send(bytes(request_str, "utf-8"))
+
         print("request sent")
 
         headers_finished: bool = False
