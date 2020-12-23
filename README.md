@@ -2,6 +2,17 @@
 
 [![Build Status](https://travis-ci.org/scoulomb/http-over-socket.svg?branch=main)](https://travis-ci.org/scoulomb/http-over-socket)
 
+## Objective
+
+This is an educational project where we implement our own application layer for `HTTP` directly on top of transport layer (`Socket`).
+See:
+- https://docs.python.org/3/howto/sockets.html
+- https://en.wikipedia.org/wiki/Network_socket
+- https://en.wikipedia.org/wiki/Internet_protocol_suite
+- https://medium.com/swlh/looking-under-the-hood-http-over-tcp-sockets-952a944c99da
+
+It is like we re-implement Python `request` lib and `curl`.
+
 ## Usage 
 
 ````shell script
@@ -50,8 +61,6 @@ docker-compose up --build
 
 - This client managed content-length only but some server returns a Transfer-Encoding with the size of the chunk
 See: https://tools.ietf.org/html/rfc7230#section-3.3.2
-<<<<<<< HEAD
-=======
 
 ## Example of simple usage using Kubernetes API
 
@@ -221,3 +230,5 @@ Date: Mon, 07 Dec 2020 21:14:33 GMT
 <!-- Infoblox had some issue:
 python cli.py -X POST --path "https://<DNS VIP>:443/wapi/v2.5/record:a" --header="Authorization: Basic YWRtaW46aW5mb2Jsb3g=" --body='{"name":"test1.test.loc","ipv4addr":"10.10.10.2"}'
 -->
+
+**See [Analysis and comments](README_SUITE.md).**
