@@ -42,7 +42,7 @@ our implementation is partial and implementing a full client would imply deep di
 
 ## Host header
 
-See [DEDICATED README](./README_SUITE_2_HOST_HEADER.md)
+See [DEDICATED README](README_SUITE_2_HOST_HEADER.md)
 
 <!-- infoblox API some issue as decoding Transfer-Encoding: chunked, 
  but query paramter ?name=yop.test.loc&zone=test.loc would work as part of the path and we manage the POST -->
