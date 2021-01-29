@@ -1,8 +1,24 @@
 version: "3.6"
 services:
-  ci:
+  # test the client separately (initial project)
+  ci-client:
     build:
       dockerfile: Dockerfile
-      context: .
-    image: ci
-    command: ["-X", "GET", "--path", "https://github.com:443/", "--header", "Accept: application/json", "--header", "yoloheader: scoulomb"]
+      context: ./1-client
+    image: ci-client
+    # removed "--header", "Accept: application/json" to not have a 406
+    command: ["-X", "GET", "--path", "https://github.com:443/", "--header", "yoloheader: scoulomb"]
+  # Launch the server and test the server with our own client with a GET (return no content) and POST (our server do a mirror)
+  server:
+    build:
+      dockerfile: Dockerfile
+      context: ./2-server
+    image: ci-server
+    ports:
+      - "8080:8080"
+  ci-client-server-no-content:
+    image: ci-client
+    command: ["-X", "GET", "--path", "http://server:8080", "--header", "yoloheader: scoulomb"]
+  ci-client-server-with-content:
+    image: ci-client
+    command: ["-X", "POST", "--path", "http://server:8080", "--header", "yoloheader: scoulomb", "--body", "{\"apiVersion\":\"v1\",\"kind\":\"Pod\"}"]

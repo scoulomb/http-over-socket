@@ -12,5 +12,8 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
 
+# Similar to https://github.com/scoulomb/zalando_connexion_sample/blob/master/.travis.yml
 script:
   - docker-compose up --build
+  - docker-compose logs server
+  - docker-compose stop
