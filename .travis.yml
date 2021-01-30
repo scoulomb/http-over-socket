@@ -14,6 +14,12 @@ before_install:
 
 # Similar to https://github.com/scoulomb/zalando_connexion_sample/blob/master/.travis.yml
 script:
-  - docker-compose up --build
+  # if running in local just do docker-compose up, here we do this because we have to stop compose
+  - docker-compose up -d --build
+  - sleep 10 # to run the test
+  - docker-compose logs ci-client
   - docker-compose logs server
+  # use depends_on in docker-compose
+  - docker-compose logs ci-client-server-no-content
+  - docker-compose logs ci-client-server-with-content
   - docker-compose stop

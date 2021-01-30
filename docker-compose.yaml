@@ -19,6 +19,10 @@ services:
   ci-client-server-no-content:
     image: ci-client
     command: ["-X", "GET", "--path", "http://server:8080", "--header", "yoloheader: scoulomb"]
+    depends_on:
+      - server
   ci-client-server-with-content:
     image: ci-client
     command: ["-X", "POST", "--path", "http://server:8080", "--header", "yoloheader: scoulomb", "--body", "{\"apiVersion\":\"v1\",\"kind\":\"Pod\"}"]
+    depends_on:
+      - server
